@@ -4,6 +4,7 @@ Loc::loadLanguageFile(__FILE__);
 
 AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", array("ExamClass", "OnBeforeIBlockElementUpdateHandler"));
 AddEventHandler("main", "OnProlog", array("ExamClass", "Error404Handler"));
+AddEventHandler("main", "OnBeforeEventAdd", Array("ExamClass", "OnBeforeEventAddHandler"));
 
 class ExamClass
 {
@@ -41,6 +42,27 @@ class ExamClass
                 "AUDIT_TYPE_ID" => "ERROR_404",
                 "MODULE_ID" => "main",
                 "DESCRIPTION" => $APPLICATION->GetCurPageParam("", array(), true),
+            ));
+        }
+    }
+
+    function OnBeforeEventAddHandler(&$event, &$lid, &$arFields)
+    {
+        if ($event === "FEEDBACK_FORM") {
+            global $USER;
+            if (!$USER->IsAuthorized()) {
+                $arFields["AUTHOR"] = Loc::GetMessage("USER_NOT_AUTHORIZED") . $arFields["AUTHOR"];
+            } else {
+                $arFields["AUTHOR"] = Loc::GetMessage("USER_AUTHORIZED_START") . $USER->GetID() . " (" . $USER->GetLogin() . ") "
+                . $USER->GetFullName() . ", " . Loc::GetMessage("USER_AUTHORIZED_END") . $arFields["AUTHOR"];
+            }
+
+            CEventLog::Add(array(
+                "SEVERITY" => "SECURITY",
+                "AUDIT_TYPE_ID" => Loc::GetMessage("MAIL_DATA_CHANGED"),
+                "MODULE_ID" => "main",
+                "ITEM_ID" => $event,
+                "DESCRIPTION" => Loc::GetMessage("MAIL_DATA_CHANGED") . " – " . $arFields["AUTHOR"],
             ));
         }
     }
