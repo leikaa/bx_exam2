@@ -5,6 +5,7 @@ Loc::loadLanguageFile(__FILE__);
 AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", array("ExamClass", "OnBeforeIBlockElementUpdateHandler"));
 AddEventHandler("main", "OnProlog", array("ExamClass", "Error404Handler"));
 AddEventHandler("main", "OnBeforeEventAdd", Array("ExamClass", "OnBeforeEventAddHandler"));
+AddEventHandler("main", "OnBuildGlobalMenu", Array("ExamClass", "OnBuildGlobalMenuHandler"));
 
 class ExamClass
 {
@@ -64,6 +65,24 @@ class ExamClass
                 "ITEM_ID" => $event,
                 "DESCRIPTION" => Loc::GetMessage("MAIL_DATA_CHANGED") . " – " . $arFields["AUTHOR"],
             ));
+        }
+    }
+
+    function OnBuildGlobalMenuHandler(&$aGlobalMenu, &$aModuleMenu)
+    {
+        global $USER;
+        $userGroup = $USER->GetUserGroupArray();
+        if (in_array(GROUP_MANAGER, $userGroup) && !in_array(GROUP_ADMIN, $userGroup)) {
+            foreach ($aGlobalMenu as $k => $v) {
+                if ($k !== 'global_menu_content') {
+                    unset($aGlobalMenu[$k]);
+                }
+            }
+            foreach ($aModuleMenu as $k => $v) {
+                if ($aModuleMenu[$k]["module_id"] !== 'iblock' || $aModuleMenu[$k]["items_id"] === 'menu_iblock') {
+                    unset($aModuleMenu[$k]);
+                }
+            }
         }
     }
 }
