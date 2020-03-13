@@ -5,7 +5,7 @@ if (!isset($arParams["CACHE_TIME"])) {
     $arParams["CACHE_TIME"] = 36000000;
 }
 
-if ($this->StartResultCache()) {
+if ($this->StartResultCache(false, $_REQUEST["F"])) {
     if (!CModule::IncludeModule("iblock")) {
         $this->AbortResultCache();
         ShowError(GetMessage("IBLOCK_MODULE_NOT_INSTALLED"));
@@ -40,6 +40,14 @@ if ($this->StartResultCache()) {
     // получаем продукцию
     $arFilter = array("IBLOCK_ID" => $arParams["IBLOCK_PRODUCTS"], "ACTIVE" => "Y", "SECTION_ID" => $arProdSectionIds);
     $arSelect = array("IBLOCK_ID", "ID", "NAME", "IBLOCK_SECTION_ID", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "PROPERTY_PRICE");
+    if ($_REQUEST["F"]) {
+        $arFilter[] = array(
+            array("<=PROPERTY_PRICE" => "1700", "PROPERTY_MATERIAL" => "Дерево, ткань"),
+            array("<PROPERTY_PRICE" => "1500", "PROPERTY_MATERIAL" => "Металл, пластик"),
+            "LOGIC" => "OR"
+        );
+        $this->abortResultCache();
+    }
     $res = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
     $productsCount = 0;
     while ($el = $res->Fetch()) {
