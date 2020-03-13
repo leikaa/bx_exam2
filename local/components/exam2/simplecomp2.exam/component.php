@@ -26,15 +26,21 @@ if ($this->StartResultCache(false, ($USER->GetGroups()))) {
 
     // выбираем элементы каталога
     $arFilter = array("IBLOCK_ID" => $arParams["IBLOCK_PRODUCTS"], "CHECK_PERMISSIONS" => "Y", "ACTIVE" => "Y", "PROPERTY_" . $arParams["ELEMENT_PROP_CODE"] => $arCompanyIds);
-    $arSelect = array("IBLOCK_ID", "ID", "NAME", "PROPERTY_PRICE", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER");
-    $res = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
+    $arSelect = array("IBLOCK_ID", "ID", "NAME", "PROPERTY_PRICE", "PROPERTY_MATERIAL", "PROPERTY_ARTNUMBER", "IBLOCK_SECTION_ID", "CODE");
+    $arSort = array("NAME" => "ASC", "SORT" => "ASC");
+    $res = CIBlockElement::GetList($arSort, $arFilter, false, false, $arSelect);
     $arProduct = [];
     $arProductIds[] = [];
     while ($obElement = $res-> GetNextElement()) {
         $el = $obElement->GetFields();
         $elProp = $obElement->GetProperties();
         foreach ($elProp["COMPANY"]["VALUE"] as $companyID) {
-            $arCompany[$companyID]["PRODUCTS"][] = $el;
+            $detailUrl = $arParams["TEMPLATE_DETAIL_URL"];
+            $detailUrl = str_replace("#SECTION_ID#", $el["IBLOCK_SECTION_ID"], $detailUrl);
+            $detailUrl = str_replace("#ELEMENT_CODE#", $el["CODE"], $detailUrl);
+
+            $arCompany[$companyID]["PRODUCTS"][$el["ID"]] = $el;
+            $arCompany[$companyID]["PRODUCTS"][$el["ID"]]["DETAIL_URL"] = "/" . $detailUrl . ".php";
         }
     }
 

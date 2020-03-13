@@ -10,7 +10,7 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();?>
             <ul>
                 <? foreach($company["PRODUCTS"] as $product): ?>
                     <li><?= $product["NAME"]; ?> - <?= $product["PROPERTY_PRICE_VALUE"]; ?> - <?= $product["PROPERTY_MATERIAL_VALUE"]; ?>
-                        - <?= $product["PROPERTY_ARTNUMBER_VALUE"]; ?></li>
+                        - <?= $product["PROPERTY_ARTNUMBER_VALUE"]; ?> (<?= $product["DETAIL_URL"]; ?>)</li>
                 <? endforeach; ?>
             </ul>
         </li>
