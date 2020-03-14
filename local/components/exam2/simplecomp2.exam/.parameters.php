@@ -21,6 +21,12 @@ $arComponentParameters = array(
             "TYPE" => "STRING",
             "DEFAULT" => "",
         ),
+        "PAGE_ELEMENT_COUNT" => array(
+            "PARENT" => "BASE",
+            "NAME" => GetMessage("PAGE_ELEMENT_COUNT"),
+            "TYPE" => "STRING",
+            "DEFAULT" => "1",
+        ),
         "TEMPLATE_DETAIL_URL" => array(
             "PARENT" => "URL_TEMPLATES",
             "NAME" => GetMessage("TEMPLATE_DETAIL_URL"),

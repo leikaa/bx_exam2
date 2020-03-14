@@ -16,7 +16,13 @@ if ($USER->IsAuthorized() && CModule::includeModule("iblock")) {
     );
 }
 
-if ($this->StartResultCache(false, ($USER->GetGroups()))) {
+$arNavParams = array(
+    "nPageSize" => $arParams["PAGE_ELEMENT_COUNT"],
+    "bShowAll" => false,
+);
+$arNavigation = CDBResult::GetNavParams($arNavParams);
+
+if ($this->StartResultCache(false, array($USER->GetGroups(), $arNavigation))) {
     if(!CModule::IncludeModule("iblock"))
     {
         $this->AbortResultCache();
@@ -27,9 +33,10 @@ if ($this->StartResultCache(false, ($USER->GetGroups()))) {
     // выбираем элементы классификатора
     $arFilter = array("IBLOCK_ID" => $arParams["IBLOCK_CLASSIFIER"], "CHECK_PERMISSIONS" => "Y", "ACTIVE" => "Y");
     $arSelect = array("IBLOCK_ID", "ID", "NAME");
-    $res = CIBlockElement::GetList(array(), $arFilter, false, false, $arSelect);
+    $res = CIBlockElement::GetList(array("SORT"=>"ASC"), $arFilter, false, $arNavParams, $arSelect);
     $arCompany = [];
     $arCompanyIds = [];
+    $arResult["NAV_STRING"] = $res->GetPageNavString("Странички");
     while ($el = $res-> Fetch()) {
         $arCompany[$el["ID"]] = $el;
         $arCompanyIds[] = $el["ID"];
