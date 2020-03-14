@@ -5,6 +5,17 @@ if (!isset($arParams["CACHE_TIME"])) {
     $arParams["CACHE_TIME"] = 36000000;
 }
 
+if ($USER->IsAuthorized() && CModule::includeModule("iblock")) {
+    $arButtons = CIBlock::GetPanelButtons($arParams["IBLOCK_PRODUCTS"]);
+    $this->AddIncludeAreaIcon(
+        array(
+            "TITLE" => "ИБ в админке",
+            "URL" => $arButtons['submenu']['element_list']['ACTION_URL'],
+            "IN_PARAMS_MENU" => true,
+        )
+    );
+}
+
 if ($this->StartResultCache(false, ($USER->GetGroups()))) {
     if(!CModule::IncludeModule("iblock"))
     {
