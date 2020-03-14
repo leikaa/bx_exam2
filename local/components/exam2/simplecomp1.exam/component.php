@@ -5,7 +5,10 @@ if (!isset($arParams["CACHE_TIME"])) {
     $arParams["CACHE_TIME"] = 36000000;
 }
 
-if ($this->StartResultCache(false, $_REQUEST["F"])) {
+$cacheId = md5(serialize($arParams));
+$cacheDir = "/simpleCompTagged";
+
+if ($this->StartResultCache(false, array($_REQUEST["F"], $cacheId), $cacheDir)) {
     if (!CModule::IncludeModule("iblock")) {
         $this->AbortResultCache();
         ShowError(GetMessage("IBLOCK_MODULE_NOT_INSTALLED"));
@@ -20,6 +23,8 @@ if ($this->StartResultCache(false, $_REQUEST["F"])) {
         $this->addIncludeAreaIcons(CIBlock::GetComponentMenu($APPLICATION->GetPublicShowMode(), $arButtons));
     }
 
+    global $CACHE_MANAGER;
+    $CACHE_MANAGER->StartTagCache($cacheDir);
     // получаем новости
     $arFilter = array("IBLOCK_ID" => $arParams["IBLOCK_NEWS"], "ACTIVE" => "Y");
     $arSelect = array("IBLOCK_ID", "ID", "NAME", "DATE_ACTIVE_FROM");
@@ -37,9 +42,12 @@ if ($this->StartResultCache(false, $_REQUEST["F"])) {
         $arItem["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
         $el["ITEMS"] = $arItem;
 
+        $CACHE_MANAGER->RegisterTag("simle_comp_cache_tag");
+
         $arNews[$el["ID"]] = $el;
         $arNewsId[] = $el["ID"];
     }
+    $CACHE_MANAGER->EndTagCache();
 
     // получаем разделы продукции
     $arFilter = array("IBLOCK_ID" => $arParams["IBLOCK_PRODUCTS"], "ACTIVE" => "Y", $arParams["UF_NEWS_LINK"] => $arNewsId);

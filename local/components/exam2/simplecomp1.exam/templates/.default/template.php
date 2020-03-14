@@ -1,6 +1,8 @@
 <?php
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();?>
 
+<div><?= time();?></div>
+<br/>
 <div>Фильтр: <a href="<?= $APPLICATION->GetCurPage(); ?>?F=Y"><?= $APPLICATION->GetCurPage(); ?>?F=Y</a></div>
 <div>---</div>
 <div class="bold"><?= GetMessage('CATALOG');?></div>

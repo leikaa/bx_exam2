@@ -6,6 +6,7 @@ AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", array("ExamClass", "OnB
 AddEventHandler("main", "OnProlog", array("ExamClass", "Error404Handler"));
 AddEventHandler("main", "OnBeforeEventAdd", Array("ExamClass", "OnBeforeEventAddHandler"));
 AddEventHandler("main", "OnBuildGlobalMenu", Array("ExamClass", "OnBuildGlobalMenuHandler"));
+AddEventHandler("iblock", "OnAfterIBlockElementUpdate", Array("ExamClass", "OnAfterIBlockElementUpdateHandler"));
 
 class ExamClass
 {
@@ -83,6 +84,14 @@ class ExamClass
                     unset($aModuleMenu[$k]);
                 }
             }
+        }
+    }
+
+    function OnAfterIBlockElementUpdateHandler(&$arFields)
+    {
+        // проверять приведение типов, тут к примеру без приведения строгое сравнение не пройдет
+        if ($arFields["IBLOCK_ID"] == IBLOCK_SERVICES && is_object($GLOBALS["CACHE_MANAGER"])) {
+            $GLOBALS["CACHE_MANAGER"]->ClearByTag("simle_comp_cache_tag");
         }
     }
 }
