@@ -12,6 +12,14 @@ if ($this->StartResultCache(false, $_REQUEST["F"])) {
         return;
     }
 
+    if ($APPLICATION->GetShowIncludeAreas()) {
+        $arButtons = CIBlock::GetPanelButtons(
+            $arParams["IBLOCK_NEWS"],
+            0
+        );
+        $this->addIncludeAreaIcons(CIBlock::GetComponentMenu($APPLICATION->GetPublicShowMode(), $arButtons));
+    }
+
     // получаем новости
     $arFilter = array("IBLOCK_ID" => $arParams["IBLOCK_NEWS"], "ACTIVE" => "Y");
     $arSelect = array("IBLOCK_ID", "ID", "NAME", "DATE_ACTIVE_FROM");
@@ -19,6 +27,16 @@ if ($this->StartResultCache(false, $_REQUEST["F"])) {
     $arNews = [];
     $arNewsId = [];
     while ($el = $res->Fetch()) {
+        $arButtons = CIBlock::GetPanelButtons(
+            $el["IBLOCK_ID"],
+            $el["ID"],
+            0,
+            array("SECTION_BUTTONS"=>false, "SESSID"=>false)
+        );
+        $arItem["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
+        $arItem["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
+        $el["ITEMS"] = $arItem;
+
         $arNews[$el["ID"]] = $el;
         $arNewsId[] = $el["ID"];
     }
