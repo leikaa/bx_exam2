@@ -15,6 +15,10 @@ $this->setFrameMode(true);
 <?
 //ссылка на страницу станицу exampage 
 //$url = ...
+$url = $arResult["FOLDER"] . $arResult["URL_TEMPLATES"]["exampage"];
+$url = str_replace(array("#PARAM1#", "#PARAM2#"), array("123", "456"), $url);
+// в данном случае, в компоненте могут быть заранее заданы PARAM1 и PARAM2, но в url их не будет, необходимо просто перезадать их на те же значения в настройках компонента
+
 ?><?=GetMessage("EXAM_TEXT_LINK_CP_PHOTO")?> <a href="<?=$url?>"><?=$url?></a>  
 
 <?$APPLICATION->IncludeComponent(
