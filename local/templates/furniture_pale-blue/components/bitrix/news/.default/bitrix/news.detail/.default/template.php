@@ -8,6 +8,37 @@
 	<?endif;?>
 	<?if($arParams["DISPLAY_NAME"]!="N" && $arResult["NAME"]):?>
 		<h3><?=$arResult["NAME"]?></h3>
+        <? if ($arParams["SET_AJAX_COMPLAINT"] === "Y"): ?>
+            <script>
+                (function(BX) {
+                    BX.ready(function () {
+                        var complaintEntry = document.getElementById("complaint");
+                        complaintEntry.onclick = function() {
+                            BX.ajax.loadJSON(
+                                '<? $APPLICATION->GetCurPage(); ?>',
+                                {
+                                    "TYPE": "REPORT_AJAX",
+                                    "ID": <?=$arResult["ID"];?>
+                                },
+                                function(data) {
+                                    var complaintResult = document.getElementById("complaint_result");
+                                    complaintResult.innerText = "Ваше мнение учтено, №" + data;
+                                },
+                                function() {
+                                    var complaintResult = document.getElementById("complaint_result");
+                                    complaintResult.innerText = "Ошибка!"
+                                }
+                            );
+                        }
+                    });
+                })(BX);
+            </script>
+            <span id="complaint" class="complaint">Пожаловаться на новость!</span>
+            <span id="complaint_result" class="complaint_result"></span>
+        <? else: ?>
+            <a id="complaint" class="complaint" href="<? $APPLICATION->GetCurPage();?>?ID=<?=$arResult["ID"];?>&TYPE=REPORT_GET">Пожаловаться на новость!</a>
+            <span id="complaint_result" class="complaint_result"></span>
+        <? endif; ?>
 	<?endif;?>
 	<div class="news-detail">
 	<?if($arParams["DISPLAY_PREVIEW_TEXT"]!="N" && $arResult["FIELDS"]["PREVIEW_TEXT"]):?>

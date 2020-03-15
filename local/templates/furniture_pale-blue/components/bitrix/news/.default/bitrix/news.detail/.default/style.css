@@ -7,3 +7,19 @@ div.news-detail img.detail_picture
 {
 	color:#486DAA;
 }
+
+.complaint {
+	margin-bottom: 20px;
+	color: #486DAA;
+	display: inline-block;
+	text-decoration: none;
+}
+
+.complaint:hover {
+	cursor: pointer;
+	color: red;
+}
+
+.complaint_result {
+	color: red;
+}

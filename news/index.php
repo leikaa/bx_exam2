@@ -59,6 +59,7 @@ $APPLICATION->SetTitle("Новости");
 		"SEF_FOLDER" => "/news/",
 		"SEF_MODE" => "Y",
 		"SEF_URL_TEMPLATES" => Array("detail"=>"#ELEMENT_ID#/","news"=>"","rss"=>"rss/","rss_section"=>"#SECTION_ID#/rss/","search"=>"search/","section"=>""),
+		"SET_AJAX_COMPLAINT" => "N",
 		"SET_CANONICAL" => "5",
 		"SET_LAST_MODIFIED" => "N",
 		"SET_SPECIALDATE" => "N",

@@ -35,6 +35,11 @@ $arTemplateParameters = array(
 		"DEFAULT" =>"N",
 		"REFRESH"=> "Y",
 	),
+    "SET_AJAX_COMPLAINT" => Array(
+        "NAME" => GetMessage("SET_AJAX_COMPLAINT"),
+        "TYPE" => "CHECKBOX",
+        "DEFAULT" => "N",
+    ),
 );
 
 if ($arCurrentValues["USE_SHARE"] == "Y")
