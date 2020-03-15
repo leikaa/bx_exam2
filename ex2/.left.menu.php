@@ -1,6 +1,13 @@
 <?
 $aMenuLinks = Array(
 	Array(
+		"Второй сайт", 
+		"/ex2/site2/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
 		"Форма обратной связи", 
 		"/ex2/feedback/", 
 		Array(), 
